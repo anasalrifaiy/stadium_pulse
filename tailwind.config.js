@@ -95,9 +95,9 @@ export default {
         'container-max': '1280px',
       },
       keyframes: {
-        marquee: {
-          '0%': { transform: 'translateX(100%)' },
-          '100%': { transform: 'translateX(-100%)' },
+        ticker: {
+          '0%':   { transform: 'translateX(0)' },
+          '100%': { transform: 'translateX(-50%)' },
         },
         'pulse-border': {
           '0%, 100%': { borderColor: 'rgba(74, 225, 131, 0.4)' },
@@ -105,7 +105,7 @@ export default {
         },
       },
       animation: {
-        marquee: 'marquee 30s linear infinite',
+        ticker: 'ticker 28s linear infinite',
         'pulse-border': 'pulse-border 2s infinite',
       },
     },

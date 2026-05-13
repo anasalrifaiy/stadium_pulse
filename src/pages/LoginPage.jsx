@@ -4,15 +4,18 @@ import { useGame } from '../contexts/GameContext'
 
 export default function LoginPage() {
   const navigate = useNavigate()
-  const { createGame, joinGame, hostLogin, loading, error } = useGame()
+  const { createGame, joinGame, hostLogin, staffLogin, loading, error } = useGame()
 
   const [roomCode, setRoomCode] = useState('')
   const [playerName, setPlayerName] = useState('')
   const [hostCode, setHostCode] = useState('')
   const [hostPassword, setHostPassword] = useState('')
   const [newHostPassword, setNewHostPassword] = useState('')
+  const [staffCode, setStaffCode] = useState('')
+  const [staffPassword, setStaffPassword] = useState('')
   const [hostOpen, setHostOpen] = useState(false)
   const [createOpen, setCreateOpen] = useState(false)
+  const [staffOpen, setStaffOpen] = useState(false)
 
   async function handleJoin(e) {
     e.preventDefault()
@@ -30,6 +33,12 @@ export default function LoginPage() {
     e.preventDefault()
     const id = await createGame(newHostPassword)
     if (id) navigate('/host')
+  }
+
+  async function handleStaffLogin(e) {
+    e.preventDefault()
+    const ok = await staffLogin(staffCode, staffPassword)
+    if (ok) navigate('/staff')
   }
 
   return (
@@ -194,14 +203,64 @@ export default function LoginPage() {
             )}
           </section>
 
-          {/* Scoreboard link */}
-          <div className="text-center">
-            <a
-              href="#/scoreboard"
-              className="inline-flex items-center gap-sm text-on-surface-variant hover:text-tertiary transition-colors font-label-lg"
+          {/* Staff login */}
+          <section className="w-full space-y-md">
+            <button
+              onClick={() => { setStaffOpen(!staffOpen); setHostOpen(false) }}
+              className="w-full flex items-center justify-center gap-sm text-on-surface-variant hover:text-tertiary transition-colors py-sm"
             >
-              <span className="material-symbols-outlined text-sm">tv</span>
-              <span>عرض لوحة النتائج العامة</span>
+              <span className="material-symbols-outlined text-sm">badge</span>
+              <span className="font-label-lg">دخول فريق العمل (منتج / مساعد)</span>
+              <span className={`material-symbols-outlined transition-transform duration-300 ${staffOpen ? 'rotate-180' : ''}`}>expand_more</span>
+            </button>
+
+            {staffOpen && (
+              <div className="glass-card rounded-xl p-xl space-y-md border border-tertiary/20 bg-tertiary-container/5">
+                <form onSubmit={handleStaffLogin} className="space-y-md">
+                  <div className="relative">
+                    <input
+                      className="w-full bg-surface-container-highest/50 border border-outline-variant text-on-surface rounded-lg py-md px-xl focus:ring-2 focus:ring-tertiary focus:border-transparent transition-all placeholder:text-on-surface-variant/50 outline-none uppercase"
+                      placeholder="رمز الغرفة"
+                      type="text"
+                      value={staffCode}
+                      onChange={e => setStaffCode(e.target.value.toUpperCase())}
+                      maxLength={6}
+                      required
+                    />
+                    <span className="material-symbols-outlined absolute right-md top-1/2 -translate-y-1/2 text-on-surface-variant">pin</span>
+                  </div>
+                  <div className="relative">
+                    <input
+                      className="w-full bg-surface-container-highest/50 border border-outline-variant text-on-surface rounded-lg py-md px-xl focus:ring-2 focus:ring-tertiary focus:border-transparent transition-all placeholder:text-on-surface-variant/50 outline-none"
+                      placeholder="كلمة مرور فريق العمل"
+                      type="password"
+                      value={staffPassword}
+                      onChange={e => setStaffPassword(e.target.value)}
+                      required
+                    />
+                    <span className="material-symbols-outlined absolute right-md top-1/2 -translate-y-1/2 text-on-surface-variant">lock</span>
+                  </div>
+                  <button
+                    type="submit"
+                    disabled={loading}
+                    className="w-full border-2 border-tertiary text-tertiary hover:bg-tertiary hover:text-on-tertiary font-bold py-md rounded-lg transition-all flex justify-center items-center gap-sm disabled:opacity-50"
+                  >
+                    <span>دخول كفريق عمل</span>
+                    <span className="material-symbols-outlined">badge</span>
+                  </button>
+                </form>
+              </div>
+            )}
+          </section>
+
+          {/* Quick links */}
+          <div className="flex justify-center gap-xl flex-wrap">
+            <a
+              href="#/broadcast"
+              className="inline-flex items-center gap-sm text-on-surface-variant hover:text-secondary transition-colors font-label-lg"
+            >
+              <span className="material-symbols-outlined text-sm">live_tv</span>
+              <span>شاشة البث</span>
             </a>
           </div>
         </div>
