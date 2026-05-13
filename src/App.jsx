@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route, Navigate, useNavigate } from 'react-router-dom'
+import { HashRouter as BrowserRouter, Routes, Route, Navigate, useNavigate } from 'react-router-dom'
 import { GameProvider, useGame } from './contexts/GameContext'
 import LoginPage from './pages/LoginPage'
 import HostDashboard from './pages/HostDashboard'
