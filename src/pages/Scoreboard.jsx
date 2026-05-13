@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
-import { doc, onSnapshot, getDoc } from 'firebase/firestore'
+import { useSearchParams } from 'react-router-dom'
+import { doc, onSnapshot } from 'firebase/firestore'
 import { db } from '../firebase'
 
 function Icon({ name, className = '', style }) {
@@ -7,20 +8,17 @@ function Icon({ name, className = '', style }) {
 }
 
 export default function Scoreboard() {
+  const [searchParams] = useSearchParams()
   const [gameState, setGameState] = useState(null)
-  const [gameId, setGameId] = useState('')
   const [inputCode, setInputCode] = useState('')
   const [ticker, setTicker] = useState(0)
 
-  // Try to get gameId from URL or localStorage
+  // Get gameId from ?game= param or localStorage
+  const gameId = searchParams.get('game') || localStorage.getItem('sp_gameId') || ''
+
   useEffect(() => {
-    const params = new URLSearchParams(window.location.search)
-    const codeFromUrl = params.get('game')
-    const codeFromStorage = localStorage.getItem('sp_gameId')
-    const id = codeFromUrl || codeFromStorage || ''
-    setGameId(id)
-    setInputCode(id)
-  }, [])
+    setInputCode(gameId)
+  }, [gameId])
 
   // Listen to game state
   useEffect(() => {
@@ -42,7 +40,8 @@ export default function Scoreboard() {
 
   function handleConnect(e) {
     e.preventDefault()
-    setGameId(inputCode.toUpperCase())
+    // Navigate to the same page with the game param in the hash
+    window.location.hash = `/scoreboard?game=${inputCode.toUpperCase()}`
   }
 
   if (!gameId || !gameState) {

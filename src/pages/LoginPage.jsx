@@ -197,7 +197,7 @@ export default function LoginPage() {
           {/* Scoreboard link */}
           <div className="text-center">
             <a
-              href="/scoreboard"
+              href="#/scoreboard"
               className="inline-flex items-center gap-sm text-on-surface-variant hover:text-tertiary transition-colors font-label-lg"
             >
               <span className="material-symbols-outlined text-sm">tv</span>

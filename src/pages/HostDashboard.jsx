@@ -45,7 +45,7 @@ function LobbyScreen({ gameId, gameState, onStart, onLogout }) {
           </div>
           <p className="text-xs text-outline font-label-lg">
             اعرض هذا الرمز للمتسابقين ليدخلوا على{' '}
-            <span className="text-primary">localhost:5174</span>
+            <span className="text-primary">{window.location.origin}{window.location.pathname}</span>
           </p>
         </div>
 
@@ -89,7 +89,7 @@ function LobbyScreen({ gameId, gameState, onStart, onLogout }) {
         {/* Scoreboard link */}
         <div className="text-center">
           <a
-            href={`/scoreboard?game=${gameId}`}
+            href={`#/scoreboard?game=${gameId}`}
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-sm text-tertiary font-label-lg hover:text-tertiary-fixed transition-colors"
@@ -306,7 +306,7 @@ export default function HostDashboard() {
 
         <div className="space-y-sm">
           <a
-            href={`/scoreboard?game=${gameId}`}
+            href={`#/scoreboard?game=${gameId}`}
             target="_blank"
             rel="noopener noreferrer"
             className="w-full py-md bg-tertiary-container text-on-tertiary-container rounded-xl font-bold flex items-center justify-center gap-sm hover:opacity-90 transition-opacity"
