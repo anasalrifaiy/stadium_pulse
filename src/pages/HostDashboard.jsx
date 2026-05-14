@@ -390,7 +390,7 @@ export default function HostDashboard() {
   const currentIdx  = gameState.currentQuestionIndex || 0
   const currentQ    = questions[currentIdx]
   const players     = gameState.players || {}
-  const roundType   = gameState.roundType || 'normal'
+  const roundType   = (gameState.roundType === 'normal' ? 'speed' : gameState.roundType) || 'speed'
   const hasPending  = Object.values(players).some(p => p.answerStatus === 'pending')
   const isPaused    = gameState.paused || false
   const announcements = gameState.announcements || []

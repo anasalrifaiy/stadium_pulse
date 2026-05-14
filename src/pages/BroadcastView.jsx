@@ -224,7 +224,7 @@ export default function BroadcastView() {
   const questions = gameState.questions || []
   const currentIdx = gameState.currentQuestionIndex || 0
   const currentQ = questions[currentIdx]
-  const roundType = gameState.roundType || 'normal'
+  const roundType = (gameState.roundType === 'normal' ? 'speed' : gameState.roundType) || 'speed'
   const roundMeta = ROUND_LABELS[roundType] || ROUND_LABELS.normal
   const p1Score = p1.score || 0
   const p2Score = p2.score || 0

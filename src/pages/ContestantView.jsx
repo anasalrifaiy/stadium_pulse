@@ -244,7 +244,7 @@ export default function ContestantView() {
   const myRank        = myScore >= otherScore ? 1 : 2
   const answerStatus  = player.answerStatus
   const judged        = answerStatus === 'pending' || answerStatus === 'accepted' || answerStatus === 'rejected' || answerStatus === 'timeout'
-  const roundType     = gameState?.roundType || 'normal'
+  const roundType     = (gameState?.roundType === 'normal' ? 'speed' : gameState?.roundType) || 'speed'
   const normalBuzzer  = gameState?.normalBuzzer ?? null
   const speedBuzzer   = gameState?.speedBuzzer
   const speedBuzzerTimestamp = gameState?.speedBuzzerTimestamp ?? null
