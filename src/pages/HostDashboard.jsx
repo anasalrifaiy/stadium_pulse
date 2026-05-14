@@ -8,11 +8,10 @@ function Icon({ name, className = '', style }) {
 }
 
 const ROUND_TYPES = [
-  { id: 'normal',  label: 'عادي',       icon: 'quiz',         color: 'primary',   desc: 'سؤال وجواب — المقدم يحكم على الإجابة' },
-  { id: 'speed',   label: 'سرعة',       icon: 'bolt',         color: 'secondary', desc: 'أول من يضغط يجيب — النقاط مضاعفة' },
+  { id: 'speed',   label: 'سرعة',       icon: 'bolt',         color: 'secondary', desc: 'أول من يضغط الجرس ويجيب صح يأخذ النقاط — وإلا تنتقل الفرصة للمنافس (30 ثانية)' },
   { id: 'auction', label: 'مزاد',       icon: 'gavel',        color: 'tertiary',  desc: 'المتسابقون يراهنون بنقاطهم — الأعلى مزايدة يجيب' },
   { id: 'whoami',  label: 'من أنا؟',    icon: 'help',         color: 'primary',   desc: 'تلميحات تكشف هوية شخصية — كلما بكّرت ربحت أكثر' },
-  { id: 'golden',  label: 'ذهبي',       icon: 'emoji_events', color: 'secondary', desc: 'كل متسابق يراهن بعدد من نقاطه قبل الإجابة' },
+  { id: 'golden',  label: 'ذهبي',       icon: 'emoji_events', color: 'secondary', desc: 'سؤال فاصل — أول من يجيب صح يفوز بالرهان' },
 ]
 
 // ── Lobby ──────────────────────────────────────────────────────────────────
@@ -205,7 +204,7 @@ function PlayerCard({ playerKey, player, roundType, gameState, onAccept, onRejec
 function QuestionBankTab({ gameState, onLoad, onAdd, onRemove }) {
   const [selectedCat, setSelectedCat] = useState('الكل')
   const [tab, setTab] = useState('bank')      // 'bank' | 'game' | 'add'
-  const [newQ, setNewQ] = useState({ text: '', answer: '', points: 10, type: 'normal', category: 'عام' })
+  const [newQ, setNewQ] = useState({ text: '', answer: '', points: 10, type: 'speed', category: 'عام' })
   const allCats = ['الكل', ...categories]
 
   const gameQuestions = gameState?.questions || []
@@ -273,10 +272,10 @@ function QuestionBankTab({ gameState, onLoad, onAdd, onRemove }) {
             تحميل 12 سؤالاً عشوائياً (بدون تكرار)
           </button>
           <button
-            onClick={() => onLoad([...whoamiBank.filter(q => !gameIds.has(q.id)), ...getRandomQuestions(8, [...gameIds, ...whoamiBank.map(w => w.id)])])}
+            onClick={() => onLoad(whoamiBank.filter(q => !gameIds.has(q.id)))}
             className="w-full py-md bg-tertiary-container text-on-tertiary-container rounded-xl font-bold hover:opacity-90 transition-opacity"
           >
-            تحميل أسئلة "من أنا؟" + مزيج عشوائي (بدون تكرار)
+            تحميل أسئلة "من أنا؟" فقط (بدون تكرار)
           </button>
         </div>
       )}
@@ -322,7 +321,6 @@ function QuestionBankTab({ gameState, onLoad, onAdd, onRemove }) {
             <div>
               <label className="font-label-lg text-on-surface-variant text-xs block mb-xs">نوع الفقرة</label>
               <select value={newQ.type} onChange={e => setNewQ(p => ({ ...p, type: e.target.value }))} className="w-full bg-surface-container-highest/50 border border-outline-variant text-on-surface rounded-xl py-md px-lg font-body-md outline-none focus:border-secondary transition-colors">
-                <option value="normal">عادي</option>
                 <option value="speed">سرعة</option>
               </select>
             </div>
@@ -364,13 +362,14 @@ export default function HostDashboard() {
   useEffect(() => { if (!gameId) navigate('/') }, [gameId, navigate])
   useEffect(() => { const iv = setInterval(() => setElapsed(s => s + 1), 1000); return () => clearInterval(iv) }, [])
 
-  // Speed round countdown
+  // Speed round countdown — synced with Firestore timestamp
   useEffect(() => {
-    if (gameState?.roundType !== 'speed' || !gameState?.speedBuzzer) { setSpeedTimer(null); return }
-    setSpeedTimer(15)
-    const iv = setInterval(() => setSpeedTimer(t => t !== null && t > 0 ? t - 1 : 0), 1000)
+    if (gameState?.roundType !== 'speed' || !gameState?.speedBuzzer || !gameState?.speedBuzzerTimestamp) { setSpeedTimer(null); return }
+    const tick = () => setSpeedTimer(Math.max(0, Math.ceil((gameState.speedBuzzerTimestamp + 30000 - Date.now()) / 1000)))
+    tick()
+    const iv = setInterval(tick, 250)
     return () => clearInterval(iv)
-  }, [gameState?.speedBuzzer, gameState?.roundType])
+  }, [gameState?.speedBuzzer, gameState?.roundType, gameState?.speedBuzzerTimestamp])
 
   if (!gameState) {
     return (

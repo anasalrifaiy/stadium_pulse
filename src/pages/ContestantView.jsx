@@ -139,8 +139,8 @@ function SliderInput({ value, setValue, max, label }) {
 }
 
 // ─── Countdown ───────────────────────────────────────────────────────────────
-function Countdown({ endTime, onExpire, duration = 20 }) {
-  const isValid = endTime && !isNaN(endTime)
+function Countdown({ endTime, onExpire, duration = 30 }) {
+  const isValid = typeof endTime === 'number' && !isNaN(endTime) && endTime > 1_000_000_000_000
   const [remaining, setRemaining] = useState(() =>
     isValid ? Math.max(0, Math.ceil((endTime - Date.now()) / 1000)) : 0
   )
@@ -378,7 +378,7 @@ export default function ContestantView() {
         )
       }
       if (speedBuzzer === playerKey) {
-        const expireTime = speedBuzzerTimestamp ? speedBuzzerTimestamp + 20000 : null
+        const expireTime = speedBuzzerTimestamp ? speedBuzzerTimestamp + 30000 : null
         return (
           <div className="space-y-lg">
             <div className="flex justify-center">
@@ -392,7 +392,7 @@ export default function ContestantView() {
         <div className="flex flex-col items-center gap-lg py-xl glass-card rounded-xxl p-xl">
           <Icon name="block" className="text-error" style={{ fontSize: '80px' }} />
           <p className="font-headline-md text-headline-md text-error">المنافس ضغط أولاً!</p>
-          <Countdown endTime={speedBuzzerTimestamp ? speedBuzzerTimestamp + 20000 : null} />
+          <Countdown endTime={speedBuzzerTimestamp ? speedBuzzerTimestamp + 30000 : null} />
           <p className="text-on-surface-variant font-body-md">انتظر نتيجة إجابته</p>
         </div>
       )
@@ -487,29 +487,7 @@ export default function ContestantView() {
       return <NormalAnswerForm onSubmit={submitAnswer} label={`رهانك: ${myWager} نقطة | صح: +${myWager} | خطأ: -${myWager}`} />
     }
 
-    // Normal — buzzer first
-    if (!normalBuzzer) {
-      return (
-        <div className="flex flex-col items-center gap-xl py-xl">
-          <p className="text-on-surface-variant font-body-md text-center">اضغط الجرس للإجابة على السؤال</p>
-          <button
-            onClick={normalBuzz}
-            className="w-52 h-52 rounded-full bg-secondary text-on-secondary shadow-[0_0_80px_rgba(74,225,131,0.4)] active:scale-95 hover:brightness-110 transition-all flex flex-col items-center justify-center gap-sm border-4 border-secondary/40"
-          >
-            <Icon name="notifications" className="text-[72px]" style={{ fontVariationSettings: "'FILL' 1" }} />
-            <span className="font-extrabold text-headline-lg tracking-widest">جرس!</span>
-          </button>
-        </div>
-      )
-    }
-    if (normalBuzzer === playerKey) return <NormalAnswerForm onSubmit={submitAnswer} label="أنت ضغطت أولاً! 🔔 أجب الآن" />
-    return (
-      <div className="flex flex-col items-center gap-lg py-xl glass-card rounded-xxl p-xl">
-        <Icon name="block" className="text-error" style={{ fontSize: '80px' }} />
-        <p className="font-headline-md text-headline-md text-error">المنافس ضغط أولاً!</p>
-        <p className="text-on-surface-variant font-body-md">انتظر نتيجة إجابته</p>
-      </div>
-    )
+    return null
   }
 
   const latestAnnouncement = announcements.length > 0 ? announcements[tickerIdx % announcements.length]?.text : null
@@ -669,9 +647,7 @@ export default function ContestantView() {
                   : answerStatus === 'timeout' ? 'انتهى الوقت! ⏱️'
                   : 'تم استلام إجابتك'}
                 </h4>
-                {(answerStatus === 'rejected' || answerStatus === 'timeout') && currentQ?.answer &&
-                 !(roundType === 'normal' && normalBuzzer && normalBuzzer !== playerKey) &&
-                 !(roundType === 'speed' && speedBuzzer && speedBuzzer !== playerKey) ? (
+                {(answerStatus === 'rejected' || answerStatus === 'timeout') && currentQ?.answer ? (
                   <div className="mt-xs">
                     <p className="text-on-surface-variant font-body-md text-sm">الإجابة الصحيحة:</p>
                     <p className="text-secondary font-bold">{currentQ.answer}</p>

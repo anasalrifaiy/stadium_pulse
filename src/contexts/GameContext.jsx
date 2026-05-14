@@ -42,7 +42,7 @@ export function GameProvider({ children }) {
         announcements: [],
         currentAnnouncement: '',
         // round state
-        roundType: 'normal',      // 'normal' | 'speed' | 'auction' | 'whoami' | 'golden'
+        roundType: 'speed',       // 'speed' | 'auction' | 'whoami' | 'golden'
         normalBuzzer: null,
         speedBuzzer: null,
         speedBuzzerTimestamp: null,
@@ -125,7 +125,7 @@ export function GameProvider({ children }) {
     const currentRoundType = gameState?.roundType || 'normal'
     let newRoundType = currentRoundType
     if (q?.type === 'whoami') newRoundType = 'whoami'
-    else if (currentRoundType === 'whoami') newRoundType = 'normal' // leaving whoami → reset
+    else if (currentRoundType === 'whoami') newRoundType = 'speed' // leaving whoami → reset
     await updateDoc(doc(db, 'games', gameId), {
       currentQuestionIndex: bounded,
       roundType: newRoundType,
@@ -381,7 +381,7 @@ export function GameProvider({ children }) {
       players: defaultPlayers,
       announcements: [],
       currentAnnouncement: '',
-      roundType: 'normal',
+      roundType: 'speed',
       normalBuzzer: null,
       speedBuzzer: null,
       speedBuzzerTimestamp: null,

@@ -375,7 +375,7 @@ export default function BroadcastView() {
                   {gameState.speedBuzzer === 'player1' ? (p1.name || 'ل١') : (p2.name || 'ل٢')}
                 </p>
                 {gameState.speedBuzzerTimestamp && !players[gameState.speedBuzzer]?.answerStatus && (
-                  <BroadcastCountdown endTime={gameState.speedBuzzerTimestamp + 20000} />
+                  <BroadcastCountdown endTime={gameState.speedBuzzerTimestamp + 30000} />
                 )}
               </div>
             )}
