@@ -139,7 +139,7 @@ function SliderInput({ value, setValue, max, label }) {
 }
 
 // ─── Countdown ───────────────────────────────────────────────────────────────
-function Countdown({ endTime, onExpire, duration = 30 }) {
+function Countdown({ endTime, onExpire, duration = 10 }) {
   const isValid = typeof endTime === 'number' && !isNaN(endTime) && endTime > 1_000_000_000_000
   const [remaining, setRemaining] = useState(() =>
     isValid ? Math.max(0, Math.ceil((endTime - Date.now()) / 1000)) : 0
@@ -378,7 +378,7 @@ export default function ContestantView() {
         )
       }
       if (speedBuzzer === playerKey) {
-        const expireTime = speedBuzzerTimestamp ? speedBuzzerTimestamp + 30000 : null
+        const expireTime = speedBuzzerTimestamp ? speedBuzzerTimestamp + 10000 : null
         return (
           <div className="space-y-lg">
             <div className="flex justify-center">
@@ -392,7 +392,7 @@ export default function ContestantView() {
         <div className="flex flex-col items-center gap-lg py-xl glass-card rounded-xxl p-xl">
           <Icon name="block" className="text-error" style={{ fontSize: '80px' }} />
           <p className="font-headline-md text-headline-md text-error">المنافس ضغط أولاً!</p>
-          <Countdown endTime={speedBuzzerTimestamp ? speedBuzzerTimestamp + 30000 : null} />
+          <Countdown endTime={speedBuzzerTimestamp ? speedBuzzerTimestamp + 10000 : null} />
           <p className="text-on-surface-variant font-body-md">انتظر نتيجة إجابته</p>
         </div>
       )

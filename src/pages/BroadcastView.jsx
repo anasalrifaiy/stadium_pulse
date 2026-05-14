@@ -26,7 +26,7 @@ function BroadcastCountdown({ endTime }) {
     return () => clearInterval(iv)
   }, [endTime])
 
-  const pct = Math.max(0, remaining / 20)
+  const pct = Math.max(0, remaining / 10)
   const r = 28
   const circ = 2 * Math.PI * r
   const dash = circ * pct
@@ -375,7 +375,7 @@ export default function BroadcastView() {
                   {gameState.speedBuzzer === 'player1' ? (p1.name || 'ل١') : (p2.name || 'ل٢')}
                 </p>
                 {gameState.speedBuzzerTimestamp && !players[gameState.speedBuzzer]?.answerStatus && (
-                  <BroadcastCountdown endTime={gameState.speedBuzzerTimestamp + 30000} />
+                  <BroadcastCountdown endTime={gameState.speedBuzzerTimestamp + 10000} />
                 )}
               </div>
             )}

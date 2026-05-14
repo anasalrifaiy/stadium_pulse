@@ -8,7 +8,7 @@ function Icon({ name, className = '', style }) {
 }
 
 const ROUND_TYPES = [
-  { id: 'speed',   label: 'سرعة',       icon: 'bolt',         color: 'secondary', desc: 'أول من يضغط الجرس ويجيب صح يأخذ النقاط — وإلا تنتقل الفرصة للمنافس (30 ثانية)' },
+  { id: 'speed',   label: 'سرعة',       icon: 'bolt',         color: 'secondary', desc: 'أول من يضغط الجرس ويجيب صح يأخذ النقاط — وإلا تنتقل الفرصة للمنافس (10 ثواني)' },
   { id: 'auction', label: 'مزاد',       icon: 'gavel',        color: 'tertiary',  desc: 'المتسابقون يراهنون بنقاطهم — الأعلى مزايدة يجيب' },
   { id: 'whoami',  label: 'من أنا؟',    icon: 'help',         color: 'primary',   desc: 'تلميحات تكشف هوية شخصية — كلما بكّرت ربحت أكثر' },
   { id: 'golden',  label: 'ذهبي',       icon: 'emoji_events', color: 'secondary', desc: 'سؤال فاصل — أول من يجيب صح يفوز بالرهان' },
@@ -365,7 +365,7 @@ export default function HostDashboard() {
   // Speed round countdown — synced with Firestore timestamp
   useEffect(() => {
     if (gameState?.roundType !== 'speed' || !gameState?.speedBuzzer || !gameState?.speedBuzzerTimestamp) { setSpeedTimer(null); return }
-    const tick = () => setSpeedTimer(Math.max(0, Math.ceil((gameState.speedBuzzerTimestamp + 30000 - Date.now()) / 1000)))
+    const tick = () => setSpeedTimer(Math.max(0, Math.ceil((gameState.speedBuzzerTimestamp + 10000 - Date.now()) / 1000)))
     tick()
     const iv = setInterval(tick, 250)
     return () => clearInterval(iv)
